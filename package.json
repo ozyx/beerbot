@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "A beer bot for discord",
   "main": "index.js",
+  "repository": {
+      "url": "https://github.com/ozyx/beerbot"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bot/index.js"
