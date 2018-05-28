@@ -1,6 +1,6 @@
 const { OWNERS, BEERBOT_TOKEN } = process.env;
-import * as path from "path";
 import { CommandoClient } from "discord.js-commando";
+import * as path from "path";
 
 // TODO: Find a better way to check if these are undefined.
 if (OWNERS === undefined) {
@@ -24,7 +24,7 @@ client.on("ready", () => {
 
 client.login(BEERBOT_TOKEN);
 
-process.on("unhandledRejection", err => {
-	console.error("[FATAL] Unhandled Promise Rejection.", err);
-	process.exit(1);
+process.on("unhandledRejection", (err) => {
+    console.error("[FATAL] Unhandled Promise Rejection.", err);
+    process.exit(1);
 });

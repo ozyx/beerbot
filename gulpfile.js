@@ -3,6 +3,13 @@ var sourcemaps = require('gulp-sourcemaps');
 var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
 var clean = require('gulp-clean');
+var gulp_tslint = require('gulp-tslint');
+
+gulp.task('tslint', () => {
+    return gulp.src(['**/*.ts', '!**/*.d.ts', '!node_modules/**', '!bot/tests/**'])
+        .pipe(gulp_tslint())
+        .pipe(gulp_tslint.report());
+});
 
 gulp.task('clean', function () {
     return gulp.src(['bot/**/*.js', 'bot/**/*.js.map'], {
@@ -11,7 +18,7 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task("build", gulp.series(['clean'], function () {
+gulp.task("build", gulp.series(['clean', 'tslint'], function () {
     var tsResult = gulp.src('bot/**/*.ts')
         .pipe(sourcemaps.init()) // This means sourcemaps will be generated
         .pipe(tsProject());
@@ -20,3 +27,5 @@ gulp.task("build", gulp.series(['clean'], function () {
         .pipe(sourcemaps.write('.')) // Now the sourcemaps are added to the .js file
         .pipe(gulp.dest('bot'));
 }));
+
+gulp.task("default", gulp.series(['build'], function (done){done()}));
