@@ -9,6 +9,7 @@
   "author": "jesse mazzella",
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^10.1.3",
     "discord.js": "^11.3.2",
     "discord.js-commando": "^0.10.0"
   },
