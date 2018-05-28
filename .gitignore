@@ -1,4 +1,4 @@
 node_modules
 bot/**/*.js
 bot/**/*.js.map
-**/auth.json
+configure.bat
