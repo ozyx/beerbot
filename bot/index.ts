@@ -15,7 +15,16 @@ const client: CommandoClient = new CommandoClient({
     owner: OWNERS.split(","),
 });
 
-client.registry.registerDefaults()
+client.registry
+    .registerDefaultTypes()
+    .registerGroups([
+        ["util", "Utility"],
+        ["commands", "Command Management"],
+        ["info", "Discord Information"],
+    ])
+    .registerDefaultCommands({
+        eval_: false,
+    })
     .registerCommandsIn(path.join(__dirname, "commands"));
 
 client.on("ready", () => {
