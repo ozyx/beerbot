@@ -2,3 +2,4 @@ node_modules
 bot/**/*.js
 bot/**/*.js.map
 configure.bat
+configure.sh
