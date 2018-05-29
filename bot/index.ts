@@ -21,6 +21,7 @@ client.registry
         ["util", "Utility"],
         ["commands", "Command Management"],
         ["info", "Discord Information"],
+        ["untappd", "Untappd commands"],
     ])
     .registerDefaultCommands({
         eval_: false,
@@ -30,6 +31,13 @@ client.registry
 client.on("ready", () => {
     console.log(`[READY] Logged in as ${client.user.tag}! (${client.user.id})`);
 });
+
+client.on("disconnect", (event) => {
+    console.error(`[DISCONNECT] Disconnected with code ${event.code}.`);
+    process.exit(0);
+});
+
+client.on("commandRun", (command) => console.log(`[COMMAND] Ran command ${command.groupID}:${command.memberName}.`));
 
 client.login(BEERBOT_TOKEN);
 
