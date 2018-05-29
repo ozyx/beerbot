@@ -48,20 +48,26 @@ export default class YellCommand extends Command {
         });
     }
 
-    public async run(message: CommandMessage, args: object, fromPattern: boolean): Promise<(Message | Message[])> {
-        const trimmedMsg = message.content.split(" ");
-        trimmedMsg.shift();
+    /**
+     * Converts a user's message into big block emoji letters
+     * and sends it as a response.
+     * Useful when you have something to say loudly, but you're only
+     * on the internet.
+     * @param message the message which triggered this command
+     * @param args optional arguments
+     */
+    public async run(message: CommandMessage, args: object): Promise<(Message | Message[])> {
         const newMessage: string[] = [];
-        [...trimmedMsg.join(" ")].forEach((c) => {
-            if (c !== undefined) {
-                if (YellCommand.letterConverter.has(c)) {
-                    const converted: string | undefined = YellCommand.letterConverter.get(c);
-                    if (converted !== undefined) {
-                        newMessage.push(converted);
-                    }
+
+        [...args.toString()].forEach((c) => {
+            if (YellCommand.letterConverter.has(c)) {
+                const converted: string | undefined = YellCommand.letterConverter.get(c);
+                if (converted !== undefined) {
+                    newMessage.push(converted);
                 }
             }
         });
+
         return message.channel.send(newMessage.join(" "));
     }
 }
