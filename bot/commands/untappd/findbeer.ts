@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
 
-module.exports = class FindBeerCommand extends Command {
+export default class FindBeerCommand extends Command {
     constructor(client: CommandoClient) {
         const commandName = "findbeer";
         super(client, {
@@ -18,4 +18,4 @@ module.exports = class FindBeerCommand extends Command {
     public async run(message: CommandMessage, args: object, fromPattern: boolean): Promise<(Message|Message[])> {
         return message.channel.send("WIP!");
     }
-};
+}
