@@ -22,6 +22,7 @@ client.registry
         ["commands", "Command Management"],
         ["info", "Discord Information"],
         ["untappd", "Untappd commands"],
+        ["fun", "Just for fun!"],
     ])
     .registerDefaultCommands({
         eval_: false,
