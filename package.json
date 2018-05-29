@@ -4,10 +4,12 @@
   "description": "A beer bot for discord",
   "main": "index.js",
   "repository": {
-      "url": "https://github.com/ozyx/beerbot"
+    "url": "https://github.com/ozyx/beerbot"
   },
   "scripts": {
     "test": "echo No tests yet. Get off my back, mom!!",
+    "postinstall": "npm run compile",
+    "compile": "gulp build",
     "start": "node ./bot/index.js"
   },
   "author": "jesse mazzella",
