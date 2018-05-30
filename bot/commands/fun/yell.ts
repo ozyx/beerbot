@@ -33,6 +33,16 @@ export default class YellCommand extends Command {
         ["!", ":exclamation:"],
         ["?", ":question:"],
         [" ", " "],
+        ["1", ":one:"],
+        ["2", ":two:"],
+        ["3", ":three:"],
+        ["4", ":four:"],
+        ["5", ":five:"],
+        ["6", ":six:"],
+        ["7", ":seven:"],
+        ["8", ":eight:"],
+        ["9", ":nine:"],
+        ["0", ":zero:"],
     ]);
 
     constructor(client: CommandoClient) {
@@ -60,6 +70,7 @@ export default class YellCommand extends Command {
         const newMessage: string[] = [];
 
         [...args.toString()].forEach((c) => {
+            c = c.toLowerCase();
             if (YellCommand.letterConverter.has(c)) {
                 const converted: string | undefined = YellCommand.letterConverter.get(c);
                 if (converted !== undefined) {
@@ -67,6 +78,11 @@ export default class YellCommand extends Command {
                 }
             }
         });
+
+        // Ensure that the message the bot sends is within the length limit on Discord
+        while (newMessage.join(" ").length > 2000) {
+            newMessage.pop();
+        }
 
         return message.channel.send(newMessage.join(" "));
     }
