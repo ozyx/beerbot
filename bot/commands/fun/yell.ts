@@ -84,6 +84,8 @@ export default class YellCommand extends Command {
             newMessage.pop();
         }
 
+        await message.delete();
+
         return message.channel.send(newMessage.join(" "));
     }
 }
