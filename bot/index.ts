@@ -1,6 +1,8 @@
-const { OWNERS, BEERBOT_TOKEN } = process.env;
 import { CommandoClient } from "discord.js-commando";
 import * as path from "path";
+
+// Get environment variables
+const { OWNERS, BEERBOT_TOKEN } = process.env;
 
 // TODO: Find a better way to check if these are undefined.
 if (OWNERS === undefined) {
