@@ -19,13 +19,15 @@ export default class AsciiCommand extends Command {
 
     public async run(message: CommandMessage, args: object): Promise<(Message | Message[])> {
 
-        let finalMessage: string = figlet.textSync(args, {font: "1Row"});
+        let finalMessage: string = figlet.textSync(args, {});
 
         if (finalMessage === "") {
             // do something
         }
 
         finalMessage = "```" + finalMessage + "```";
+
+        await message.delete();
 
         return message.channel.send(finalMessage);
     }
