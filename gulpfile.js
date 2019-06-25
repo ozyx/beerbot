@@ -36,6 +36,9 @@ gulp.task('sourcemap', () => {
         .pipe(tsProject());
 
     return tsResult.js
+        .pipe(sourcemaps.mapSources(function(sourcePath, file){
+            return sourcePath.replace(/^.*\//, '');
+        }))
         .pipe(sourcemaps.write('.')) // Now the sourcemaps are added to the .js file
         .pipe(gulp.dest('bot'));
 });
