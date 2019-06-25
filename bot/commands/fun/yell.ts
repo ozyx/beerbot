@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import { Command, CommandMessage, CommandoClient, FriendlyError } from "discord.js-commando";
 
 export default class YellCommand extends Command {
 
@@ -67,6 +67,11 @@ export default class YellCommand extends Command {
      * @param args optional arguments
      */
     public async run(message: CommandMessage, args: object): Promise<(Message | Message[])> {
+
+        if (!args) {
+            throw new FriendlyError("Message cannot be empty");
+        }
+
         const newMessage: string[] = [];
 
         [...args.toString()].forEach((c) => {
