@@ -17,7 +17,7 @@ export default class BirthdayCommand extends Command {
         });
     }
 
-    public async run(message: CommandMessage, _args: object): Promise<(Message | Message[])> {
+    public async run(message: CommandMessage, args: object): Promise<(Message | Message[])> {
         const bdayBoi: GuildMember | undefined = message.mentions.members.first();
         if (!bdayBoi) {
             throw new FriendlyError("User was not provided. Please @ them");
