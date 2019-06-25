@@ -24,12 +24,12 @@ export default class BirthdayCommand extends Command {
         }
 
         // Save original nickname
-        const originalNick = bdayBoi.nickname;
+        const originalNick = bdayBoi.nickname || bdayBoi.displayName;
 
         // Make sure user's nickname is not already containing the decorations
         if (!originalNick.startsWith("🎂") && !originalNick.endsWith("🎂")) {
 
-            bdayBoi.setNickname(`🎂 ${originalNick} 🎂`);
+            await bdayBoi.setNickname(`🎂 ${originalNick} 🎂`, "COME ON AND CELEBRATE!");
 
             // Reset nickname at midnight
             setTimeout(() => {
