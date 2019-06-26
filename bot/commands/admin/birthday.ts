@@ -30,12 +30,12 @@ export default class BirthdayCommand extends Command {
         if (!originalNick.startsWith("🎂") && !originalNick.endsWith("🎂")) {
 
             await bdayBoi.setNickname(`🎂 ${originalNick} 🎂`, "COME ON AND CELEBRATE!");
-            console.log(`${new Date}: Nickname changed`);
+            console.log(`${new Date()}: Nickname changed`);
 
             // Reset nickname at midnight
             setTimeout(() => {
                 bdayBoi.setNickname(originalNick);
-                console.log(`${new Date}: Nickname reset`);
+                console.log(`${new Date()}: Nickname reset`);
             }, this.msUntilMidnight());
         }
 
@@ -43,9 +43,9 @@ export default class BirthdayCommand extends Command {
     }
 
     private msUntilMidnight(): number {
-        const midnight = new Date().setHours(24, 0, 0, 0);;
+        const midnight = new Date().setHours(24, 0, 0, 0);
         const ms = midnight - new Date().getTime();
-        console.log(`${new Date}: Time until midnight ${ms / 1000 / 60}:${ms / 1000 / 60 / 60}:${ms / 1000 / 60 / 60 / 60}`)
+        console.log(`${new Date()}: Time until midnight ${ms / 1000 / 60}:${ms / 1000 / 60 / 60}:${ms / 1000 / 60 / 60 / 60}`);
         return ms;
     }
 }
