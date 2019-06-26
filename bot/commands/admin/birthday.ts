@@ -1,5 +1,6 @@
 import { GuildMember, Message } from "discord.js";
 import { Command, CommandMessage, CommandoClient, FriendlyError } from "discord.js-commando";
+import * as logger from "../../utility/logger";
 
 export default class BirthdayCommand extends Command {
 
@@ -45,7 +46,7 @@ export default class BirthdayCommand extends Command {
     private msUntilMidnight(): number {
         const midnight = new Date().setHours(24, 0, 0, 0);
         const ms = midnight - new Date().getTime();
-        console.log(`${new Date()}: Time until midnight ${ms / 1000 / 60}:${ms / 1000 / 60 / 60}:${ms / 1000 / 60 / 60 / 60}`);
+        console.log(`${new Date()}: Time until midnight ${logger.msToTime(ms)}`);
         return ms;
     }
 }
