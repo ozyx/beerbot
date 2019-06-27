@@ -47,6 +47,6 @@ client.on("commandRun", (command) => Logger.log(`[COMMAND] Ran command ${command
 client.login(BEERBOT_TOKEN);
 
 process.on("unhandledRejection", (err) => {
-    Logger.log("[FATAL] Unhandled Promise Rejection.", err);
+    Logger.log(`[FATAL] Unhandled Promise Rejection: ${err}`);
     process.exit(1);
 });

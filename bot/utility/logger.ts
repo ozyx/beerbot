@@ -1,11 +1,12 @@
 import * as fs from "fs";
+import * as os from "os";
 
 export class Logger {
     public static log(message: string): void {
         this.tee(message);
     }
 
-    private static logFile = "%TEMP%/beerbot_log.txt";
+    private static logFile = `${os.tmpdir()}/beerbot_log.txt`;
 
     private static tee(message: string): void {
         fs.appendFileSync(this.logFile, message);
@@ -15,7 +16,6 @@ export class Logger {
     private static now(): string {
         return new Date().toISOString();
     }
-
 }
 
 export function msToTime(duration: number): string {
