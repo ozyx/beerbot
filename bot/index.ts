@@ -1,5 +1,6 @@
 import { CommandoClient } from "discord.js-commando";
 import * as path from "path";
+import { Logger } from "./utility/logger";
 
 // Get environment variables
 const { OWNERS, BEERBOT_TOKEN } = process.env;
@@ -33,19 +34,19 @@ client.registry
     .registerCommandsIn(path.join(__dirname, "commands"));
 
 client.on("ready", () => {
-    console.log(`[READY] Logged in as ${client.user.tag}! (${client.user.id})`);
+    Logger.log(`[READY] Logged in as ${client.user.tag}! (${client.user.id})`);
 });
 
 client.on("disconnect", (event) => {
-    console.error(`[DISCONNECT] Disconnected with code ${event.code}.`);
+    Logger.log(`[DISCONNECT] Disconnected with code ${event.code}.`);
     process.exit(0);
 });
 
-client.on("commandRun", (command) => console.log(`[COMMAND] Ran command ${command.groupID}:${command.memberName}.`));
+client.on("commandRun", (command) => Logger.log(`[COMMAND] Ran command ${command.groupID}:${command.memberName}.`));
 
 client.login(BEERBOT_TOKEN);
 
 process.on("unhandledRejection", (err) => {
-    console.error("[FATAL] Unhandled Promise Rejection.", err);
+    Logger.log("[FATAL] Unhandled Promise Rejection.", err);
     process.exit(1);
 });
