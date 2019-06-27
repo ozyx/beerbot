@@ -1,3 +1,23 @@
+import * as fs from "fs";
+
+export class Logger {
+    public static log(message: string): void {
+        this.tee(message);
+    }
+
+    private static logFile = "%TEMP%/beerbot_log.txt";
+
+    private static tee(message: string): void {
+        fs.appendFileSync(this.logFile, message);
+        console.log(`${this.now()}: ${message}`);
+    }
+
+    private static now(): string {
+        return new Date().toISOString();
+    }
+
+}
+
 export function msToTime(duration: number): string {
     const seconds = (duration / 1000);
     const minutes = (duration / (1000 * 60));
@@ -9,7 +29,7 @@ export function msToTime(duration: number): string {
     if (seconds < 60) {
         timeStr = seconds.toFixed(1) + " sec";
     } else if (minutes < 60) {
-        timeStr =  minutes.toFixed(1) + " min";
+        timeStr = minutes.toFixed(1) + " min";
     } else if (hours < 24) {
         timeStr = hours.toFixed(1) + " hours";
     } else {

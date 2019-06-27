@@ -1,6 +1,7 @@
 import { GuildMember, Message } from "discord.js";
 import { Command, CommandMessage, CommandoClient, FriendlyError } from "discord.js-commando";
-import * as logger from "../../utility/logger";
+import { Logger } from "../../utility/logger";
+import { msToTime } from "../../utility/logger";
 
 export default class BirthdayCommand extends Command {
 
@@ -31,12 +32,12 @@ export default class BirthdayCommand extends Command {
         if (!originalNick.startsWith("🎂") && !originalNick.endsWith("🎂")) {
 
             await bdayBoi.setNickname(`🎂 ${originalNick} 🎂`, "COME ON AND CELEBRATE!");
-            console.log(`${new Date()}: Nickname changed`);
+            Logger.log(`Nickname changed for ${originalNick}`);
 
             // Reset nickname at midnight
             setTimeout(() => {
                 bdayBoi.setNickname(originalNick);
-                console.log(`${new Date()}: Nickname reset`);
+                Logger.log(`Nickname reset for ${originalNick}`);
             }, this.msUntilMidnight());
         }
 
@@ -46,7 +47,7 @@ export default class BirthdayCommand extends Command {
     private msUntilMidnight(): number {
         const midnight = new Date().setHours(24, 0, 0, 0);
         const ms = midnight - new Date().getTime();
-        console.log(`${new Date()}: Time until midnight ${logger.msToTime(ms)}`);
+        Logger.log(`Time until midnight ${msToTime(ms)}`);
         return ms;
     }
 }
