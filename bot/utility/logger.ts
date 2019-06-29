@@ -1,12 +1,13 @@
 import * as fs from "fs";
 import * as os from "os";
+import config from "../config.json";
 
 export class Logger {
     public static log(message: string): void {
         this.tee(message);
     }
 
-    private static logFile = `${os.tmpdir()}/beerbot_log.txt`;
+    private static logFile = `${os.tmpdir()}/${config.logfileName}.log`;
 
     private static tee(message: string): void {
         fs.appendFileSync(this.logFile, message);
