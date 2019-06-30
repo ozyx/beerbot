@@ -10,8 +10,9 @@ export class Logger {
     private static logFile = `${os.tmpdir()}/${config.logfileName}.log`;
 
     private static tee(message: string): void {
-        fs.appendFileSync(this.logFile, message);
-        console.log(`${this.now()}: ${message}`);
+        const timestampedMsg = `${this.now()}: ${message}`;
+        fs.appendFileSync(this.logFile, timestampedMsg);
+        console.log(timestampedMsg);
     }
 
     private static now(): string {
