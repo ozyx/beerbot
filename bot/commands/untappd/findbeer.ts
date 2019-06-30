@@ -42,7 +42,7 @@ export default class FindBeerCommand extends Command {
             uri: `${this.baseUrl}/search/beer?${this.authString}&q=${queryString}$limit=10`,
         };
 
-        await request.get(options).then((result) => {
+        await request.get(options).then((result: any) => {
 
             if (result.meta.code !== 200) {
                 // TODO: throw error
@@ -57,24 +57,23 @@ export default class FindBeerCommand extends Command {
             if (result.response.found === 1) {
                 beerMessage = this.prepareBeerEmbed(result.response.beers.items[0]);
             } else {
-                const item: IUntappdItem = this.getUserChoice(result.response.beers.items, message.channel, message.member.id);
-
-                if (!item) {
-                    // TODO: error
-                } else {
-
-                    beerMessage = this.prepareBeerEmbed(item);
-                }
+                this.getUserChoice(result.response.beers.items, message.channel, message.member.id).then((item: IUntappdItem | undefined) => {
+                    if (!item) {
+                        // TODO: error
+                    } else {
+                        beerMessage = this.prepareBeerEmbed(item);
+                    }
+                });
             }
             return message.channel.send(beerMessage);
-        }, (reason) => {
+        }, (reason: any) => {
             return message.channel.send(reason.details);
         });
 
         return message.channel.send("error");
     }
 
-    private async getUserChoice(items: IUntappdItem[], channel: TextChannel | DMChannel | GroupDMChannel, memberId: string): Promise<IUntappdItem> {
+    private async getUserChoice(items: IUntappdItem[], channel: TextChannel | DMChannel | GroupDMChannel, memberId: string): Promise<IUntappdItem | undefined> {
         let count: number = items.length;
 
         if (count > 10) {
