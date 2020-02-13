@@ -26,10 +26,16 @@ export default class ClapCommand extends Command {
         if (!args) {
             throw new FriendlyError("Message cannot be empty");
         }
+        // Match on emojis, do not capitalize if we match
+        const regex = new RegExp("^<.*:\\d*>$");
 
         const newMessage: string[] = [];
-        for (const word of args.toString().split(" ")) {
-            newMessage.push(word.toUpperCase());
+
+        for (let word of args.toString().split(" ")) {
+            if (!regex.test(word)) {
+                word = word.toUpperCase();
+            }
+            newMessage.push(word);
         }
 
         // Ensure that the message the bot sends is within the length limit on Discord
