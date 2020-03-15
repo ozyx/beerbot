@@ -1,3 +1,4 @@
+/* tslint:disable:max-classes-per-file */
 import { Message, User } from "discord.js";
 import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
 import { promisify } from "util";
@@ -5,9 +6,10 @@ import { promisify } from "util";
 const setTimeoutPromise = promisify(setTimeout);
 
 class HarkMessage {
-    line: string;
-    delay: number;
-    constructor(line: string, delay: number){
+    public line: string;
+    public delay: number;
+
+    constructor(line: string, delay: number) {
         this.line = line;
         this.delay = delay;
     }
@@ -15,7 +17,7 @@ class HarkMessage {
 
 export default class HarkCommand extends Command {
 
-    private static hark: Array<HarkMessage> = [
+    private static hark: HarkMessage[] = [
         new HarkMessage("Let Neptune strike ye dead, Winslow!", 3000),
         new HarkMessage("Haaaaark!", 4000),
         new HarkMessage("Hark, Triton, Hark!", 4000),
