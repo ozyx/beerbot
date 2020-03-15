@@ -54,7 +54,6 @@ export default class HarkCommand extends Command {
     constructor(client: CommandoClient) {
         const commandName = "hark";
         super(client, {
-            aliases: ["h"],
             description: "Haaaark!!",
             examples: [`${commandName}`],
             group: "fun",
