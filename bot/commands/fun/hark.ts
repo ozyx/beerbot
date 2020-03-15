@@ -48,7 +48,7 @@ export default class HarkCommand extends Command {
         new HarkMessage("for any stuff or part of Winslow,", 4000),
         new HarkMessage("even any scantling of your soul,", 3000),
         new HarkMessage("is Winslow no more,", 3000),
-        new HarkMessage("but is now itself the sea.", 5000),
+        new HarkMessage("but is now itself the sea.", 0),
     ];
 
     constructor(client: CommandoClient) {
@@ -68,10 +68,14 @@ export default class HarkCommand extends Command {
         const harker: User = message.mentions.users.first() || message.author;
         const winslow = /Winslow/gi;
 
+        message.channel.startTyping();
         for (const harkMessage of HarkCommand.hark) {
             await message.channel.send(harkMessage.line.replace(winslow, harker.username));
+            message.channel.stopTyping();
+            message.channel.startTyping();
             await setTimeoutPromise(harkMessage.delay);
         }
+        message.channel.stopTyping(true);
 
         return Promise.resolve([]);
     }
