@@ -39,10 +39,12 @@ export default class FindBeerCommand extends Command {
 
         const queryString = args.toString();
         const options = {
-            uri: `${this.baseUrl}/search/beer?${this.authString}&q=${queryString}$limit=10`,
+            uri: `${this.baseUrl}/search/beer?${this.authString}&q=${queryString}&limit=10`,
         };
 
         await request.get(options).then((result: any) => {
+
+            result = JSON.parse(result);
 
             if (result.meta.code !== 200) {
                 // TODO: throw error
@@ -70,7 +72,7 @@ export default class FindBeerCommand extends Command {
             return message.channel.send(reason.details);
         });
 
-        return message.channel.send("error");
+        return message.channel.send("i am error");
     }
 
     private async getUserChoice(items: IUntappdItem[], channel: TextChannel | DMChannel | GroupDMChannel, memberId: string): Promise<IUntappdItem | undefined> {
