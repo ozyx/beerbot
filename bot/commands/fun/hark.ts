@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
-import { promisify } from 'util';
+import { promisify } from "util";
 
 const setTimeoutPromise = promisify(setTimeout);
 
@@ -58,14 +58,12 @@ export default class HarkCommand extends Command {
         const harker = message.author.username;
         const winslow = /Winslow/gi;
 
-        HarkCommand.hark.forEach((harkLine) => {
+        HarkCommand.hark.forEach(async (harkLine) => {
             await message.channel.send(harkLine.replace(winslow, harker));
             await setTimeoutPromise(100);
-        })
+        });
 
-        //await message.delete();
-
-        return Promise.reslove(null);
+        return Promise.resolve(null);
     }
 }
 
