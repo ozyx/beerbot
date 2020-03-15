@@ -6,7 +6,7 @@ const setTimeoutPromise = promisify(setTimeout);
 
 export default class HarkCommand extends Command {
 
-    private static hark: Array<string> = [
+    private static hark: string[] = [
         "Let Neptune strike ye dead, Winslow!",
         "Haaaaark!",
         "Hark, Triton, Hark!",
@@ -55,8 +55,8 @@ export default class HarkCommand extends Command {
 
     public async run(message: CommandMessage, args: object): Promise<(Message | Message[])> {
 
-        let harker = message.author.username;
-        let winslow = /Winslow/gi;
+        const harker = message.author.username;
+        const winslow = /Winslow/gi;
 
         HarkCommand.hark.forEach((harkLine) => {
             await message.channel.send(harkLine.replace(winslow, harker));
