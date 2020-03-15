@@ -60,6 +60,7 @@ export default class HarkCommand extends Command {
             guildOnly: true,
             memberName: "hark",
             name: commandName,
+            throttling: { usages: 1, duration: 60 * 15 },
         });
     }
 
