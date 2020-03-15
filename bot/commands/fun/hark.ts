@@ -63,7 +63,6 @@ export default class HarkCommand extends Command {
             await setTimeoutPromise(100);
         });
 
-        return Promise.resolve(null);
+        return Promise.resolve([]);
     }
 }
-
