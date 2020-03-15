@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, User } from "discord.js";
 import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
 import { promisify } from "util";
 
@@ -55,11 +55,11 @@ export default class HarkCommand extends Command {
 
     public async run(message: CommandMessage, args: object): Promise<(Message | Message[])> {
 
-        const harker = message.author.username;
+        const harker: User = message.mentions.users.first() || message.author;
         const winslow = /Winslow/gi;
 
         HarkCommand.hark.forEach(async (harkLine) => {
-            await message.channel.send(harkLine.replace(winslow, harker));
+            await message.channel.send(harkLine.replace(winslow, harker.username));
             await setTimeoutPromise(100);
         });
 
