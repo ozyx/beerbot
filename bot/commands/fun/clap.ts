@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import { Command, CommandMessage, CommandoClient, FriendlyError } from "discord.js-commando";
 
 export default class ClapCommand extends Command {
 
@@ -7,7 +7,7 @@ export default class ClapCommand extends Command {
         const commandName = "clap";
         super(client, {
             aliases: ["c"],
-            description: "Clap some text!",
+            description: "👏 PUT 👏 CLAPS 👏 AROUND 👏 EACH 👏 WORD 👏",
             examples: [`${commandName} {message}`],
             group: "fun",
             guildOnly: true,
@@ -23,12 +23,19 @@ export default class ClapCommand extends Command {
      * @param args The words
      */
     public async run(message: CommandMessage, args: object): Promise<(Message | Message[])> {
+        if (!args) {
+            throw new FriendlyError("Message cannot be empty");
+        }
+        // Match on emojis, do not capitalize if we match
+        const regex = new RegExp("^<.*:\\d*>$");
+
         const newMessage: string[] = [];
 
-        if (args) {
-            for (const word of args.toString().split(" ")) {
-                newMessage.push(word.toUpperCase());
+        for (let word of args.toString().split(" ")) {
+            if (!regex.test(word)) {
+                word = word.toUpperCase();
             }
+            newMessage.push(word);
         }
 
         // Ensure that the message the bot sends is within the length limit on Discord
@@ -38,8 +45,8 @@ export default class ClapCommand extends Command {
 
         await message.delete();
 
+        // 👏 PUT 👏 CLAPS 👏 AROUND 👏 EACH 👏 WORD 👏
         let finalMessage: string = newMessage.join(":clap:");
-
         finalMessage = ":clap:" + finalMessage + ":clap:";
 
         return message.channel.send(finalMessage);
