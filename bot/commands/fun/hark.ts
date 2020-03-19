@@ -70,6 +70,8 @@ export default class HarkCommand extends Command {
         const harker: User = message.mentions.users.first() || message.author;
         const winslow = /Winslow/gi;
 
+        await message.delete();
+
         message.channel.startTyping();
         for (const harkMessage of HarkCommand.hark) {
             await message.channel.send(harkMessage.line.replace(winslow, harker.toString()));
