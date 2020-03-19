@@ -68,13 +68,21 @@ export default class HarkCommand extends Command {
     public async run(message: CommandMessage, args: object): Promise<(Message | Message[])> {
 
         const harker: User = message.mentions.users.first() || message.author;
+        let harkerStr: string;
+
+        if (args.toString() === "everyone" || args.toString() === "here") {
+            harkerStr = `@${args.toString()}`;
+        } else {
+            harkerStr = harker.toString();
+        }
+
         const winslow = /Winslow/gi;
 
         await message.delete();
 
         message.channel.startTyping();
         for (const harkMessage of HarkCommand.hark) {
-            await message.channel.send(harkMessage.line.replace(winslow, harker.toString()));
+            await message.channel.send(harkMessage.line.replace(winslow, harkerStr));
             message.channel.stopTyping();
             message.channel.startTyping();
             await setTimeoutPromise(harkMessage.delay);
