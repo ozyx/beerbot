@@ -1,4 +1,4 @@
-import { Collection, CollectorFilter, DMChannel, GroupDMChannel, Message, MessageReaction, RichEmbed, TextChannel } from "discord.js";
+import { CollectorFilter, DMChannel, GroupDMChannel, Message, MessageReaction, RichEmbed, TextChannel } from "discord.js";
 import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
 import * as request from "request-promise-native";
 import { IBeer, IBrewery, IUntappdItem } from "./beer-search-response";
@@ -25,8 +25,18 @@ export default class FindBeerCommand extends Command {
         });
 
         // TODO: Validate these
-        this.CLIENTID = process.env.CLIENTID;
-        this.CLIENTSECRET = process.env.CLIENTSECRET;
+        const { CLIENTID, CLIENTSECRET } = process.env;
+
+        if (CLIENTID === undefined) {
+            throw new Error("CLIENTID environment variable must be defined!");
+        }
+
+        if (CLIENTSECRET === undefined) {
+            throw new Error("CLIENTSECRET environment variable must be defined!");
+        }
+
+        this.CLIENTID = CLIENTID;
+        this.CLIENTSECRET = CLIENTSECRET;
 
         this.authString = `client_id=${this.CLIENTID}&client_secret=${this.CLIENTSECRET}`;
         this.baseUrl = "https://api.untappd.com/v4/";
@@ -42,37 +52,40 @@ export default class FindBeerCommand extends Command {
             uri: `${this.baseUrl}/search/beer?${this.authString}&q=${queryString}&limit=10`,
         };
 
-        await request.get(options).then((result: any) => {
-
+        try {
+            let result = await request.get(options);
             result = JSON.parse(result);
 
             if (result.meta.code !== 200) {
-                // TODO: throw error
+                return message.channel.send("Request not successful :confused:");
             }
 
             if (result.response.found === 0) {
-                // TODO: throw error
+                return message.channel.send("Sorry, wasn't able to find anything by that name...");
             }
 
             let beerMessage: RichEmbed = new RichEmbed();
 
             if (result.response.found === 1) {
                 beerMessage = this.prepareBeerEmbed(result.response.beers.items[0]);
+                return message.channel.send(beerMessage);
             } else {
-                this.getUserChoice(result.response.beers.items, message.channel, message.member.id).then((item: IUntappdItem | undefined) => {
+                try {
+                    const item = await this.getUserChoice(result.response.beers.items, message.channel, message.member.id);
+
                     if (!item) {
-                        // TODO: error
+                        return Promise.reject();
                     } else {
                         beerMessage = this.prepareBeerEmbed(item);
                     }
-                });
+                    return message.channel.send(beerMessage);
+                } catch (error) {
+                    return message.channel.send(error.details);
+                }
             }
-            return message.channel.send(beerMessage);
-        }, (reason: any) => {
-            return message.channel.send(reason.details);
-        });
-
-        return message.channel.send("i am error");
+        } catch (error) {
+            return message.channel.send(error.details);
+        }
     }
 
     private async getUserChoice(items: IUntappdItem[], channel: TextChannel | DMChannel | GroupDMChannel, memberId: string): Promise<IUntappdItem | undefined> {
@@ -84,26 +97,20 @@ export default class FindBeerCommand extends Command {
 
         try {
 
-            await channel.startTyping();
+            channel.startTyping();
             const message: Message | Message[] = await channel.send(this.prepareBeerListEmbed(items, count));
-            await channel.stopTyping();
+            channel.stopTyping();
 
-            if (message instanceof Array) {
-                // do nothing
-            } else {
+            if (!(message instanceof Array)) {
                 for (let i = 0; i < count; i++) {
-                    try {
-                        await message.react(emojiReacts[i]);
-                    } catch (err) {
-                        // TODO: error
-                    }
+                    await message.react(emojiReacts[i]);
                 }
 
-                const filter: CollectorFilter = (reaction, user) => reaction.emoji.name in emojiReacts && user === memberId;
+                const filter: CollectorFilter = (reaction, user) => emojiReacts.indexOf(reaction.emoji.name) > -1 && user.id === memberId;
 
-                const choice: Collection<string, MessageReaction> = await message.awaitReactions(filter, { time: 10000, max: 1 });
+                const choice = await message.awaitReactions(filter, { time: 10000, max: 1, errors: ["time"] });
                 const hasReacted: boolean = choice.size > 0;
-                let result: IUntappdItem;
+                let result: IUntappdItem | undefined;
 
                 if (hasReacted) {
                     let j: number = 0;
@@ -113,18 +120,14 @@ export default class FindBeerCommand extends Command {
                     if (j < emojiReacts.length) {
                         result = items[j];
                     }
+                    await message.delete();
                 }
 
-                return new Promise<IUntappdItem>((resolve, reject) => {
-                    if (hasReacted) {
-                        resolve(result);
-                    } else {
-                        reject(/*TODO:*/ "");
-                    }
-                });
+                return result;
             }
         } catch (err) {
-            // TODO: error
+            // TODO: this feels... gross
+            return undefined;
         }
     }
 
