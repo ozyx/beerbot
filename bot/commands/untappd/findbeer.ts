@@ -1,5 +1,5 @@
 import { CollectorFilter, DMChannel, GroupDMChannel, Message, MessageReaction, RichEmbed, TextChannel } from "discord.js";
-import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import { Command, CommandMessage, CommandoClient, FriendlyError } from "discord.js-commando";
 import * as request from "request-promise-native";
 import { IBeer, IBrewery, IUntappdItem } from "./beer-search-response";
 import { emojiReacts } from "./config";
@@ -44,7 +44,7 @@ export default class FindBeerCommand extends Command {
 
     public async run(message: CommandMessage, args: object, fromPattern: boolean): Promise<(Message | Message[])> {
         if (!args) {
-            // TODO: throw error
+            throw new FriendlyError("Missing arguments-- please specify your search query!");
         }
 
         const queryString = args.toString();
@@ -57,11 +57,11 @@ export default class FindBeerCommand extends Command {
             result = JSON.parse(result);
 
             if (result.meta.code !== 200) {
-                return message.channel.send("Request not successful :confused:");
+                throw new FriendlyError("Request not successful :confused:");
             }
 
             if (result.response.found === 0) {
-                return message.channel.send("Sorry, wasn't able to find anything by that name...");
+                throw new FriendlyError("Sorry, wasn't able to find anything by that name...");
             }
 
             let beerMessage: RichEmbed = new RichEmbed();
@@ -84,7 +84,7 @@ export default class FindBeerCommand extends Command {
                 }
             }
         } catch (error) {
-            return message.channel.send(error.details);
+            return message.channel.send(error.message);
         }
     }
 
@@ -107,23 +107,27 @@ export default class FindBeerCommand extends Command {
                 }
 
                 const filter: CollectorFilter = (reaction, user) => emojiReacts.indexOf(reaction.emoji.name) > -1 && user.id === memberId;
+                try {
+                    const choice = await message.awaitReactions(filter, { time: 10000, max: 1, errors: ["time"] });
 
-                const choice = await message.awaitReactions(filter, { time: 10000, max: 1, errors: ["time"] });
-                const hasReacted: boolean = choice.size > 0;
-                let result: IUntappdItem | undefined;
+                    const hasReacted: boolean = choice.size > 0;
+                    let result: IUntappdItem | undefined;
 
-                if (hasReacted) {
-                    let j: number = 0;
-                    while (j < emojiReacts.length && emojiReacts[j] !== choice.array()[0].emoji.toString()) {
-                        j++;
+                    if (hasReacted) {
+                        let j: number = 0;
+                        while (j < emojiReacts.length && emojiReacts[j] !== choice.array()[0].emoji.toString()) {
+                            j++;
+                        }
+                        if (j < emojiReacts.length) {
+                            result = items[j];
+                        }
+                        await message.delete();
                     }
-                    if (j < emojiReacts.length) {
-                        result = items[j];
-                    }
-                    await message.delete();
+
+                    return result;
+                } catch (err) {
+                    await message.clearReactions();
                 }
-
-                return result;
             }
         } catch (err) {
             // TODO: this feels... gross
