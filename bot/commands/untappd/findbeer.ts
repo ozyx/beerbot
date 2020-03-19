@@ -74,7 +74,7 @@ export default class FindBeerCommand extends Command {
                     const item = await this.getUserChoice(result.response.beers.items, message.channel, message.member.id);
 
                     if (!item) {
-                        return Promise.reject();
+                        return Promise.resolve([]);
                     } else {
                         beerMessage = this.prepareBeerEmbed(item);
                     }
