@@ -72,7 +72,7 @@ export default class HarkCommand extends Command {
 
         message.channel.startTyping();
         for (const harkMessage of HarkCommand.hark) {
-            await message.channel.send(harkMessage.line.replace(winslow, harker.username));
+            await message.channel.send(harkMessage.line.replace(winslow, harker.toString()));
             message.channel.stopTyping();
             message.channel.startTyping();
             await setTimeoutPromise(harkMessage.delay);
