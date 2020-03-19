@@ -80,7 +80,7 @@ export default class FindBeerCommand extends Command {
                     }
                     return message.channel.send(beerMessage);
                 } catch (error) {
-                    return message.channel.send(error.details);
+                    return message.channel.send(error.message);
                 }
             }
         } catch (error) {
@@ -175,7 +175,9 @@ export default class FindBeerCommand extends Command {
             .setAuthor("Untappd");
 
         for (let i = 0; i < count; i++) {
-            embed.addField(emojiReacts[i], items[i].beer.beer_name);
+            // '\u200b' unicode delineates a blank title field
+            // ref: https://discordjs.guide/popular-topics/embeds.html#embed-preview
+            embed.addField("\u200b", `${emojiReacts[i]} ${items[i].beer.beer_name} - ${items[i].brewery.brewery_name}`);
         }
 
         return embed;
